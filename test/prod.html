@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Font Parser</title>
+  </head>
+  <body>
+    <script src="../build/opentype.js"></script>
+    <script>
+      function parse(file) {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', file, true);
+        xhr.responseType = 'arraybuffer';
+
+        xhr.onload = function (e) {
+          console.time('parse');
+          console.log(opentype.parse(this.response));
+          console.timeEnd('parse');
+        };
+
+        xhr.send();
+      }
+
+      parse('fonts/sourcesanspro-regular.woff');
+      parse('fonts/sourcesanspro-regular.ttf');
+      parse('fonts/sourcesanspro-regular.otf');
+    </script>
+  </body>
+</html>
