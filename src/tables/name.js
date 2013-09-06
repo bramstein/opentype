@@ -74,17 +74,17 @@ goog.scope(function () {
     'Family',
     'Subfamily',
     'Identifier',
-    'Full Name',
+    'FullName',
     'Version',
-    'Postscript Name',
+    'PostscriptName',
     'Trademark',
     'Manufacturer',
     'Designer',
     'Description',
-    'Vendor URL',
-    'Designer URL',
+    'VendorURL',
+    'DesignerURL',
     'License',
-    'License URL'
+    'LicenseURL'
   ];
 
   tables.name.MacintoshLanguages = {
