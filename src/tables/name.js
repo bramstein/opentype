@@ -57,35 +57,13 @@ goog.scope(function () {
             data[language] = {};
           }
 
-          var nameIdentifier = tables.name.Identifiers[record.nameID];
-
-          if (nameIdentifier) {
-            data[language][nameIdentifier] = util.byteArrayToString(table.readArray(Type.BYTE, record.length, stringOffset + record.offset));
-          }
+          data[language][record.nameID] = util.byteArrayToString(table.readArray(Type.BYTE, record.length, stringOffset + record.offset));
         }
       }
     });
 
     return data;
   };
-
-  tables.name.Identifiers = [
-    'Copyright',
-    'Family',
-    'Subfamily',
-    'Identifier',
-    'FullName',
-    'Version',
-    'PostscriptName',
-    'Trademark',
-    'Manufacturer',
-    'Designer',
-    'Description',
-    'VendorURL',
-    'DesignerURL',
-    'License',
-    'LicenseURL'
-  ];
 
   tables.name.MacintoshLanguages = {
     '0': 'en',
