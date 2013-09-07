@@ -4,7 +4,7 @@ This is a pure JavaScript parser for font files. It supports the two main format
 
 The following OpenType tables are currently supported:
 
-* CMAP (only format ...)
+* CMAP (only format 0, 4, 12, and 13)
 * head
 * hhea
 * maxp
