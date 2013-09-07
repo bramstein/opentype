@@ -11,7 +11,7 @@ The following OpenType tables are currently supported:
 * hmtx
 * name
 * OS/2
-* post (excluding the extended version)
+* post
 * GSUB (excluding LookupType 5, 6, 7, and 8)
 * GDEF (only the Glyph Class Definitions)
 
