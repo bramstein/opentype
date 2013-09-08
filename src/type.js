@@ -11,7 +11,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         return dataView.getUint8(opt_byteOffset || 0);
@@ -24,7 +24,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         return dataView.getInt8(opt_byteOffset || 0);
@@ -37,7 +37,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         return dataView.getUint16(opt_byteOffset || 0);
@@ -50,7 +50,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         return dataView.getInt16(opt_byteOffset || 0);
@@ -63,7 +63,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         return dataView.getUint32(opt_byteOffset || 0);
@@ -76,7 +76,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         return dataView.getInt32(opt_byteOffset || 0);
@@ -89,7 +89,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {string}
        */
       read: function (dataView, opt_byteOffset) {
         var uint = dataView.getUint32(opt_byteOffset || 0);
@@ -107,7 +107,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {number}
        */
       read: function (dataView, opt_byteOffset) {
         var integer = dataView.getInt16(opt_byteOffset || 0),
@@ -124,7 +124,7 @@ goog.scope(function () {
       /**
        * @param {DataView} dataView
        * @param {number=} opt_byteOffset
-       * @return {*}
+       * @return {{high: number, low: number}}
        */
       read: function (dataView, opt_byteOffset) {
         var byteOffset = opt_byteOffset || 0;

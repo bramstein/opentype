@@ -28,7 +28,7 @@ goog.scope(function () {
    *
    * @param {opentype.Struct} type
    * @param {number=} opt_byteOffset
-   * @return {*}
+   * @return {?}
    */
   Reader.prototype.read = function (type, opt_byteOffset) {
     var data = type.read(this.dataView, opt_byteOffset || this.byteOffset);
@@ -48,7 +48,7 @@ goog.scope(function () {
    * @param {opentype.Struct} type
    * @param {number} count
    * @param {number=} opt_byteOffset
-   * @return {Array.<*>}
+   * @return {Array.<?>}
    */
   Reader.prototype.readArray = function (type, count, opt_byteOffset) {
     var byteOffset = opt_byteOffset || this.byteOffset,
