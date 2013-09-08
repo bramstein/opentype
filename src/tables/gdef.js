@@ -1,17 +1,17 @@
 goog.provide('opentype.tables.gdef');
 
-goog.require('opentype.Reader');
+goog.require('opentype.Buffer');
 goog.require('opentype.Type');
 goog.require('opentype.util');
 
 goog.scope(function () {
-  var Reader = opentype.Reader,
+  var Buffer = opentype.Buffer,
       Type = opentype.Type,
       util = opentype.util,
       tables = opentype.tables;
 
   tables.gdef = function (dataView, font) {
-    var table = new Reader(dataView);
+    var table = new Buffer(dataView);
 
     var version = table.read(Type.ULONG);
     var glyphClassDef = table.read(Type.OFFSET);

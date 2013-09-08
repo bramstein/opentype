@@ -1,4 +1,4 @@
-goog.provide('opentype.Reader');
+goog.provide('opentype.Buffer');
 
 goog.scope(function () {
   /**
@@ -6,18 +6,18 @@ goog.scope(function () {
    * @param {DataView} dataView
    * @param {number=} opt_byteOffset
    */
-  opentype.Reader = function (dataView, opt_byteOffset) {
+  opentype.Buffer = function (dataView, opt_byteOffset) {
     this.dataView = dataView;
     this.byteOffset = opt_byteOffset || 0;
   };
 
-  var Reader = opentype.Reader;
+  var Buffer = opentype.Buffer;
 
   /**
    * Jump to an offset in this buffer
    * @param {number} byteOffset
    */
-  Reader.prototype.goto = function (byteOffset) {
+  Buffer.prototype.goto = function (byteOffset) {
     this.byteOffset = byteOffset;
   };
 
@@ -30,7 +30,7 @@ goog.scope(function () {
    * @param {number=} opt_byteOffset
    * @return {?}
    */
-  Reader.prototype.read = function (type, opt_byteOffset) {
+  Buffer.prototype.read = function (type, opt_byteOffset) {
     var data = type.read(this.dataView, opt_byteOffset || this.byteOffset);
 
     if (!goog.isDef(opt_byteOffset)) {
@@ -50,7 +50,7 @@ goog.scope(function () {
    * @param {number=} opt_byteOffset
    * @return {Array.<?>}
    */
-  Reader.prototype.readArray = function (type, count, opt_byteOffset) {
+  Buffer.prototype.readArray = function (type, count, opt_byteOffset) {
     var byteOffset = opt_byteOffset || this.byteOffset,
         data = [];
 

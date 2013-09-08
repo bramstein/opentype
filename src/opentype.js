@@ -5,7 +5,7 @@ goog.require('opentype.Type');
 goog.require('opentype.util');
 goog.require('opentype.sfnt');
 goog.require('opentype.woff');
-goog.require('opentype.Reader');
+goog.require('opentype.Buffer');
 
 goog.require('opentype.tables.cmap');
 goog.require('opentype.tables.head');
@@ -29,7 +29,7 @@ goog.scope(function () {
       util = opentype.util,
       sfnt = opentype.sfnt,
       woff = opentype.woff,
-      Reader = opentype.Reader;
+      Buffer = opentype.Buffer;
 
   opentype.table = {
     // Note that the order of the tables
@@ -53,7 +53,7 @@ goog.scope(function () {
    * @param {ArrayBuffer} arrayBuffer
    */
   opentype.parse = function (arrayBuffer) {
-    var buffer = new Reader(new DataView(arrayBuffer)),
+    var buffer = new Buffer(new DataView(arrayBuffer)),
         font = {
           'tables': {}
         };

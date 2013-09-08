@@ -1,19 +1,19 @@
 goog.provide('opentype.tables.gsub');
 
-goog.require('opentype.Reader');
+goog.require('opentype.Buffer');
 goog.require('opentype.Type');
 goog.require('opentype.util');
 goog.require('opentype.tables.common');
 
 goog.scope(function () {
-  var Reader = opentype.Reader,
+  var Buffer = opentype.Buffer,
       Type = opentype.Type,
       util = opentype.util,
       tables = opentype.tables,
       common = opentype.tables.common;
 
   tables.gsub = function (dataView, font) {
-    var table = new Reader(dataView),
+    var table = new Buffer(dataView),
         data = {};
 
     var version = table.read(Type.FIXED);

@@ -1,17 +1,17 @@
 goog.provide('opentype.tables.os2');
 
-goog.require('opentype.Reader');
+goog.require('opentype.Buffer');
 goog.require('opentype.Type');
 goog.require('opentype.util');
 
 goog.scope(function () {
-  var Reader = opentype.Reader,
+  var Buffer = opentype.Buffer,
       Type = opentype.Type,
       tables = opentype.tables,
       util = opentype.util;
 
   tables.os2 = function (dataView, font) {
-    var table = new Reader(dataView),
+    var table = new Buffer(dataView),
         data = {};
 
     util.extend(data, table.read(util.struct({
