@@ -23,9 +23,9 @@ goog.scope(function () {
    * @type {opentype.Struct}
    */
   sfnt.OffsetTable = util.struct({
-    'tag': Type.TAG,
-    'checkSum': Type.ULONG,
-    'offset': Type.ULONG,
-    'length': Type.ULONG
+    tag: Type.TAG,
+    checkSum: Type.ULONG,
+    offset: Type.ULONG,
+    length: Type.ULONG
   });
 });

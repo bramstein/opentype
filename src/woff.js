@@ -12,11 +12,11 @@ goog.scope(function () {
    * @type {opentype.Struct}
    */
   woff.TableDirectory = util.struct({
-    'tag': Type.TAG,
-    'offset': Type.ULONG,
-    'compLength': Type.ULONG,
-    'origLength': Type.ULONG,
-    'origChecksum': Type.ULONG
+    tag: Type.TAG,
+    offset: Type.ULONG,
+    compLength: Type.ULONG,
+    origLength: Type.ULONG,
+    origChecksum: Type.ULONG
   });
 
   /**

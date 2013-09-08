@@ -62,30 +62,30 @@ goog.scope(function () {
 
     if (signature === Format.WOFF) {
       font['header'] = buffer.read(woff.Header);
-      font['index'] = buffer.readArray(woff.TableDirectory, font['header']['numTables']);
+      var index = buffer.readArray(woff.TableDirectory, font['header']['numTables']);
 
-      font['index'].forEach(function (table) {
+      index.forEach(function (table) {
         var data = null,
-            tag = table['tag'];
+            tag = table.tag;
 
-        if (table['compLength'] !== table['origLength']) {
-          var compressedData = new Uint8Array(arrayBuffer, table['offset'], util.pad(table['compLength']));
+        if (table.compLength !== table.origLength) {
+          var compressedData = new Uint8Array(arrayBuffer, table.offset, util.pad(table.compLength));
           var inflate = new Zlib.Inflate(compressedData, {
-            bufferSize: table['origLength'],
+            bufferSize: table.origLength,
             bufferType: Zlib.Inflate.BufferType.BLOCK
           });
 
           font['tables'][tag] = new DataView(inflate.decompress().buffer);
         } else {
-          font['tables'][tag] = new DataView(arrayBuffer, table['offset'], util.pad(table['origLength']));
+          font['tables'][tag] = new DataView(arrayBuffer, table.offset, util.pad(table.origLength));
         }
       });
     } else if (signature === Format.TRUETYPE || signature === Format.OPENTYPE) {
       font['header'] = buffer.read(sfnt.Header);
-      font['index'] = buffer.readArray(sfnt.OffsetTable, font['header']['numTables']);
+      var index = buffer.readArray(sfnt.OffsetTable, font['header']['numTables']);
 
-      font['index'].forEach(function (table) {
-        font['tables'][table['tag']] = new DataView(arrayBuffer, table['offset'], util.pad(table['length']));
+      index.forEach(function (table) {
+        font['tables'][table.tag] = new DataView(arrayBuffer, table.offset, util.pad(table.length));
       });
     }
 
