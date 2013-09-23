@@ -17,6 +17,7 @@ goog.require('opentype.tables.os2');
 goog.require('opentype.tables.post');
 goog.require('opentype.tables.gsub');
 goog.require('opentype.tables.gdef');
+goog.require('opentype.tables.gasp');
 
 goog.require('Zlib');
 goog.require('Zlib.Inflate');
@@ -46,7 +47,8 @@ goog.scope(function () {
     'OS/2': opentype.tables.os2,
     'post': opentype.tables.post,
     'GSUB': opentype.tables.gsub,
-    'GDEF': opentype.tables.gdef
+    'GDEF': opentype.tables.gdef,
+    'gasp': opentype.tables.gasp
   };
 
   /**
