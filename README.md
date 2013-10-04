@@ -14,6 +14,7 @@ The following OpenType tables are currently supported:
 * post
 * GSUB (excluding LookupType 5, 6, 7, and 8)
 * GDEF (only the Glyph Class Definitions)
+* gasp
 
 This roughly corresponds to all the metadata available in most fonts. Future versions of this library will probably support parsing the actual font data (pull requests welcome!). 
 
