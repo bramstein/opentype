@@ -44,6 +44,13 @@ goog.scope(function () {
         offset: Type.OFFSET
       }), langSysCount);
 
+      if (defaultLangSys) {
+        data.push({
+          tag: 'DFLT',
+          table: tables.common.LangSys(buffer, offset + defaultLangSys)
+        });
+      }
+
       for (var i = 0; i < records.length; i += 1) {
         data.push({
           tag: records[i].tag,

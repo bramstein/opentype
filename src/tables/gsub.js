@@ -31,8 +31,6 @@ goog.scope(function () {
 
       data[scriptTag] = {};
 
-      var defaultLanguage = {};
-
       scriptTable.forEach(function (language) {
         var languageTag = language.tag,
             languageTable = language.table;
@@ -45,7 +43,6 @@ goog.scope(function () {
               featureTable = feature.table;
 
           data[scriptTag][languageTag][featureTag] = {};
-          defaultLanguage[featureTag] = {};
 
           featureTable['LookupListIndex'].forEach(function (lookupIndex) {
             var lookup = lookupList[lookupIndex];
@@ -53,14 +50,11 @@ goog.scope(function () {
             lookup['SubTable'].forEach(function (subTable) {
               Object.keys(subTable).forEach(function (glyphId) {
                 data[scriptTag][languageTag][featureTag][glyphId] = subTable[glyphId];
-                defaultLanguage[featureTag][glyphId] = subTable[glyphId];
               });
             });
           });
         });
       });
-
-      data['DFLT']['dflt'] = defaultLanguage;
     });
     return data;
   };
