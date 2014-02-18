@@ -1,6 +1,6 @@
-## An OpenType, TrueType, and WOFF parser in JavaScript
+## An OpenType font parser in JavaScript
 
-This is a pure JavaScript parser for font files. It supports the two main formats: OpenType and TrueType as well as WOFF.
+This is a pure JavaScript parser for OpenType font files. It supports fonts with CFF and TrueType outlines, and can read fonts wrapped as WOFF.
 
 The following OpenType tables are currently supported:
 
