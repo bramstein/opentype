@@ -64,14 +64,24 @@ goog.scope(function () {
       'sTypoLineGap': Type.SHORT,
       'usWinAscent': Type.USHORT,
       'usWinDescent': Type.USHORT,
-      'ulCodePageRange1': Type.ULONG,
-      'ulCodePageRange2': Type.ULONG,
-      'sxHeight': Type.SHORT,
-      'sCapHeight': Type.SHORT,
-      'usDefaultChar': Type.USHORT,
-      'usBreakChar': Type.USHORT,
-      'usMaxContent': Type.USHORT
     })));
+
+    if (data['version'] >= 1) {
+      util.extend(data, table.read(util.struct({
+        'ulCodePageRange1': Type.ULONG,
+        'ulCodePageRange2': Type.ULONG,
+      })));
+    }
+
+    if (data['version'] >= 2) {
+      util.extend(data, table.read(util.struct({
+        'sxHeight': Type.SHORT,
+        'sCapHeight': Type.SHORT,
+        'usDefaultChar': Type.USHORT,
+        'usBreakChar': Type.USHORT,
+        'usMaxContext': Type.USHORT
+      })));
+    }
 
     return data;
   };
