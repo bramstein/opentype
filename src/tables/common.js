@@ -91,7 +91,7 @@ goog.scope(function () {
       };
     },
 
-    LookupList: function (buffer, offset) {
+    LookupList: function (buffer, offset, table) {
       buffer.goto(offset);
 
       var data = [];
@@ -99,13 +99,13 @@ goog.scope(function () {
       var records = buffer.readArray(Type.OFFSET, count);
 
       for (var i = 0; i < count; i += 1) {
-        data.push(tables.common.Lookup(buffer, offset + records[i]));
+        data.push(tables.common.Lookup(buffer, offset + records[i], table));
       }
 
       return data;
     },
 
-    Lookup: function (buffer, offset) {
+    Lookup: function (buffer, offset, table) {
       buffer.goto(offset);
 
       var data = {};
@@ -117,7 +117,7 @@ goog.scope(function () {
       var markFilteringSet = buffer.read(Type.USHORT);
 
       for (var i = 0; i < subTableCount; i += 1) {
-         subTables[i] = tables.common.LookupType(buffer, lookupType, offset + subTables[i]);
+         subTables[i] = table(buffer, lookupType, offset + subTables[i]);
       }
 
       return {
@@ -126,129 +126,6 @@ goog.scope(function () {
         'SubTable': subTables,
         'MarkFilteringSet': markFilteringSet
       };
-    },
-
-    LookupType: function (buffer, lookupType, offset) {
-      buffer.goto(offset);
-
-      var format = buffer.read(Type.USHORT);
-      var data = {};
-
-      /**
-       * Single:
-       *
-       * <GlyphId>: [<GlyphId>]
-       *
-       * Multiple:
-       *
-       * <GlyphId>: [<GlyphId>, ...]
-       *
-       * Alternate:
-       *
-       * <GlyphId>: [[<GlyphId>, ...]]
-       *
-       * Ligature:
-       *
-       * <GlyphId>: {
-       *  <GlyphId>: <GlyphId>,
-       *  <GlyphId>: {
-       *    <GlyphId>: <GlyphId>
-       *  }
-       * }
-       */
-      if (lookupType === 1 && format === 1) {
-        var coverageOffset = buffer.read(Type.OFFSET);
-        var deltaGlyphId = buffer.read(Type.SHORT);
-        var coverage = tables.common.Coverage(buffer, offset + coverageOffset);
-        for (var i = 0; i < coverage.length; i += 1) {
-          data[coverage[i]] = [coverage[i] + deltaGlyphId];
-        }
-      } else if (lookupType === 1 && format === 2) {
-        var coverageOffset = buffer.read(Type.OFFSET);
-        var glyphCount = buffer.read(Type.USHORT);
-        var substitutes = buffer.readArray(Type.GLYPHID, glyphCount);
-        var coverage = tables.common.Coverage(buffer, offset + coverageOffset);
-
-        for (var i = 0; i < coverage.length; i += 1) {
-          data[coverage[i]] = [substitutes[i]];
-        }
-      } else if (lookupType === 2 || lookupType === 3) {
-        var coverageOffset = buffer.read(Type.OFFSET);
-        var count = buffer.read(Type.USHORT);
-
-        var setOffsets = buffer.readArray(Type.OFFSET, count);
-        var coverage = tables.common.Coverage(buffer, offset + coverageOffset);
-        var sets = [];
-
-        for (var i = 0; i < count; i += 1) {
-          buffer.goto(offset + setOffsets[i]);
-          var glyphCount = buffer.read(Type.USHORT);
-          sets.push(buffer.readArray(Type.GLYPHID, glyphCount));
-        }
-
-        for (var i = 0; i < coverage.length; i += 1) {
-          if (lookupType === 2) {
-            data[coverage[i]] = [sets[i]];
-          } else {
-            data[coverage[i]] = sets[i];
-          }
-        }
-      } else if (lookupType === 4) {
-        var coverageOffset = buffer.read(Type.OFFSET);
-        var count = buffer.read(Type.USHORT);
-
-        var setOffsets = buffer.readArray(Type.OFFSET, count);
-        var coverage = tables.common.Coverage(buffer, offset + coverageOffset);
-        var ligatureSetOffsets = [];
-
-        for (var i = 0; i < count; i += 1) {
-          buffer.goto(offset + setOffsets[i]);
-          var ligatureCount = buffer.read(Type.USHORT);
-          ligatureSetOffsets.push(buffer.readArray(Type.OFFSET, ligatureCount));
-
-        }
-
-
-        var ligatureSet = [];
-
-        for (var i = 0; i < setOffsets.length; i += 1) {
-          var ligature = [];
-
-          for (var j = 0; j < ligatureSetOffsets[i].length; j += 1) {
-            buffer.goto(offset + setOffsets[i] + ligatureSetOffsets[i][j]);
-            var ligGlyph = buffer.read(Type.GLYPHID);
-            var components = buffer.readArray(Type.GLYPHID, buffer.read(Type.USHORT) - 1);
-
-            ligature.push({
-              ligGlyph: ligGlyph,
-              components: components
-            });
-          }
-          ligatureSet.push(ligature);
-        }
-
-        for (var i = 0; i < coverage.length; i += 1) {
-          var ligatures = ligatureSet[i];
-          data[coverage[i]] = {};
-
-          for (var j = 0; j < ligatures.length; j += 1) {
-            var components = ligatures[j].components,
-                ligature = ligatures[j].ligGlyph;
-
-            var current = data[coverage[i]];
-
-            for (var k = 0; k < components.length; k += 1) {
-              if (k < components.length - 1) {
-                current[components[k]] = {};
-                current = current[components[k]];
-              } else {
-                current[components[k]] = ligature;
-              }
-            }
-          }
-        }
-      }
-      return data;
     },
 
     Coverage: function (buffer, offset) {
