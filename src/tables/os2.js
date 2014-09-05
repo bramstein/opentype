@@ -38,7 +38,7 @@ goog.scope(function () {
       'bSerifStyle': Type.BYTE,
       'bWeight': Type.BYTE,
       'bProportion': Type.BYTE,
-      'bContract': Type.BYTE,
+      'bContrast': Type.BYTE,
       'bStrokeVariation': Type.BYTE,
       'bArmStyle': Type.BYTE,
       'bLetterform': Type.BYTE,
