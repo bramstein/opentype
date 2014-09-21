@@ -94,12 +94,13 @@ goog.scope(function () {
             data['glyph'][id] = charCode;
           }
         }
-      } else if (format === 12 ||format === 13) {
+      } else if (format === 12) {
         subData = table.read(util.struct({
           format: Type.USHORT,
           reserved: Type.USHORT,
-          length: Type.USHORT,
-          nGroups: Type.USHORT
+          length: Type.ULONG,
+          language: Type.ULONG,
+          nGroups: Type.ULONG
         }));
 
         var groups = table.readArray(util.struct({
@@ -112,15 +113,33 @@ goog.scope(function () {
           var start = groups[i].startCharCode;
           var end = groups[i].endCharCode;
 
-          for (var j = start; j < end; j += 1) {
-            var charCode = j,
-                id = null;
+          for (var charCodej = start, id = groups[i].glyphID; charCode <= end; charCode += 1, id++) {
+            data['charCode'][charCode] = g;
+            data['glyph'][id] = charCode;
+          }
+        }
+      } else if (format === 13) {
+        subData = table.read(util.struct({
+          format: Type.USHORT,
+          reserved: Type.USHORT,
+          length: Type.ULONG,
+          language: Type.ULONG,
+          nGroups: Type.ULONG
+        }));
 
-            if (format === 12) {
-              id = groups[i].glyphID + j;
-            } else if (format === 13) {
-              id = groups[i].glyphID;
-            }
+        var groups = table.readArray(util.struct({
+          startCharCode: Type.ULONG,
+          endCharCode: Type.ULONG,
+          glyphID: Type.ULONG
+        }), subData.nGroups);
+
+        for (var i = 0; i < subData.nGroups; i += 1) {
+          var start = groups[i].startCharCode;
+          var end = groups[i].endCharCode;
+
+          for (var j = start; j <= end; j += 1) {
+            var charCode = j,
+                id = groups[i].glyphID;
 
             data['charCode'][charCode] = id;
             data['glyph'][id] = charCode;
