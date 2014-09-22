@@ -114,7 +114,7 @@ goog.scope(function () {
           var end = groups[i].endCharCode;
 
           for (var charCodej = start, id = groups[i].glyphID; charCode <= end; charCode += 1, id++) {
-            data['charCode'][charCode] = g;
+            data['charCode'][charCode] = id;
             data['glyph'][id] = charCode;
           }
         }
