@@ -16,7 +16,7 @@ The following OpenType tables are currently supported:
 * GDEF (only the Glyph Class Definitions)
 * gasp
 
-This roughly corresponds to all the metadata available in most fonts. Future versions of this library will probably support parsing the actual font data (pull requests welcome!). 
+This roughly corresponds to all the metadata available in most fonts. Future versions of this library will probably support parsing the actual font data (pull requests welcome!). I'm hoping to add support for GPOS, glyf and the CFF tables as well as an extensive test suite.
 
 ## Usage
 
