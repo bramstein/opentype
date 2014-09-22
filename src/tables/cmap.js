@@ -80,7 +80,7 @@ goog.scope(function () {
           var rangeOffset = idRangeOffset[i];
           var offset = idRangeTableOffset + (i * Type.USHORT.sizeof);
 
-          for (var j = start; j < end; j += 1) {
+          for (var j = start; j <= end; j += 1) {
             var charCode = j,
                 id = null;
 
