@@ -35,18 +35,24 @@ goog.scope(function () {
       var numberOfGlyphs = table.read(Type.USHORT);
       var glyphNameIndex = table.readArray(Type.USHORT, numberOfGlyphs);
       var glyphNames = [].concat(tables.post.MacRomanIdentifiers);
-      var maxIndex = 0;
+      var names = [];
 
-      for (var i = 0; i < glyphNameIndex.length; i += 1) {
-        maxIndex = Math.max(glyphNameIndex[i], maxIndex);
+      for (var i = 0; i < numberOfGlyphs; i++) {
+        var index = glyphNameIndex[i];
+
+        if (index >= 258) {
+          names.push(util.byteArrayToString(table.readArray(Type.CHAR, table.read(Type.BYTE))));
+        }
       }
 
-      for (var i = 257; i < maxIndex; i += 1) {
-        glyphNames.push(util.byteArrayToString(table.readArray(Type.CHAR, table.read(Type.BYTE))));
-      }
+      for (var i = 0; i < numberOfGlyphs; i++) {
+        var index = glyphNameIndex[i];
 
-      for (var i = 0; i < glyphNameIndex.length; i += 1) {
-        data['glyphNames'][i] = glyphNames[glyphNameIndex[i]];
+        if (index < 258) {
+          data['glyphNames'][i] = glyphNames[index];
+        } else {
+          data['glyphNames'][i] = names[index - 258];
+        }
       }
     }
 
