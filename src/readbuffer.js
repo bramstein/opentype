@@ -3,7 +3,7 @@
  * @param {DataView} dataView
  * @param {number=} opt_byteOffset
  */
-var Buffer = function (dataView, opt_byteOffset) {
+var ReadBuffer = function (dataView, opt_byteOffset) {
   this.dataView = dataView;
   this.byteOffset = opt_byteOffset || 0;
 };
@@ -12,7 +12,7 @@ var Buffer = function (dataView, opt_byteOffset) {
  * Jump to an offset in this buffer
  * @param {number} byteOffset
  */
-Buffer.prototype.goto = function (byteOffset) {
+ReadBuffer.prototype.goto = function (byteOffset) {
   this.byteOffset = byteOffset;
 };
 
@@ -25,7 +25,7 @@ Buffer.prototype.goto = function (byteOffset) {
  * @param {number=} opt_byteOffset
  * @return {?}
  */
-Buffer.prototype.read = function (type, opt_byteOffset) {
+ReadBuffer.prototype.read = function (type, opt_byteOffset) {
   var data = type.read(this.dataView, opt_byteOffset || this.byteOffset);
 
   if (opt_byteOffset === undefined) {
@@ -45,7 +45,7 @@ Buffer.prototype.read = function (type, opt_byteOffset) {
  * @param {number=} opt_byteOffset
  * @return {Array.<?>}
  */
-Buffer.prototype.readArray = function (type, count, opt_byteOffset) {
+ReadBuffer.prototype.readArray = function (type, count, opt_byteOffset) {
   var byteOffset = opt_byteOffset || this.byteOffset,
       data = [];
 
@@ -61,4 +61,4 @@ Buffer.prototype.readArray = function (type, count, opt_byteOffset) {
   return data;
 };
 
-module.exports = Buffer;
+module.exports = ReadBuffer;

@@ -3,7 +3,7 @@ var Type = require('./Type');
 var util = require('./util');
 var sfnt = require('./sfnt');
 var woff = require('./woff');
-var OTBuffer = require('./Buffer');
+var ReadBuffer = require('./readbuffer');
 var zlib = require('zlib');
 
 var cmap = require('./tables/cmap');
@@ -59,7 +59,7 @@ function toArrayBuffer(buffer) {
  * @param {ArrayBuffer} arrayBuffer
  */
 var parse = function (arrayBuffer) {
-  var buffer = new OTBuffer(new DataView(arrayBuffer)),
+  var buffer = new ReadBuffer(new DataView(arrayBuffer)),
       font = {
         tables: {}
       };

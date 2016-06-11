@@ -1,9 +1,9 @@
-var Buffer = require('../Buffer');
+var ReadBuffer = require('../readbuffer');
 var Type = require('../Type');
 var util = require('../util');
 
 module.exports = function (dataView, font) {
-  var table = new Buffer(dataView);
+  var table = new ReadBuffer(dataView);
 
   var version = table.read(Type.USHORT);
   var data = {};

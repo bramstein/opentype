@@ -1,10 +1,10 @@
-var Buffer = require('../Buffer');
+var ReadBuffer = require('../readbuffer');
 var Type = require('../Type');
 var util = require('../util');
 var common = require('./common');
 
 var gpos = function (dataView, font) {
-  var table = new Buffer(dataView),
+  var table = new ReadBuffer(dataView),
       data = {};
 
   var version = table.read(Type.FIXED);

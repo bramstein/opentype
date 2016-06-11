@@ -1,9 +1,9 @@
-var Buffer = require('../buffer');
+var ReadBuffer = require('../readbuffer');
 var Type = require('../type');
 var util = require('../util');
 
 module.exports = function (dataView, font) {
-  var table = new Buffer(dataView),
+  var table = new ReadBuffer(dataView),
       numberOfHMetrics = font.tables.hhea.numberOfHMetrics,
       numGlyphs = font.tables.maxp.numGlyphs;
 
