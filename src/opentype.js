@@ -37,58 +37,39 @@ var TABLES = {
   'gasp': gasp
 };
 
-function toBuffer(ab) {
-    var buffer = new Buffer(ab.byteLength);
-    var view = new Uint8Array(ab);
-    for (var i = 0; i < buffer.length; ++i) {
-        buffer[i] = view[i];
-    }
-    return buffer;
-}
-
-function toArrayBuffer(buffer) {
-    var ab = new ArrayBuffer(buffer.length);
-    var view = new Uint8Array(ab);
-    for (var i = 0; i < buffer.length; ++i) {
-        view[i] = buffer[i];
-    }
-    return ab;
-}
-
 /**
- * @param {ArrayBuffer} arrayBuffer
+ * @param {Buffer} buffer
  */
-var parse = function (arrayBuffer) {
-  var buffer = new ReadBuffer(new DataView(arrayBuffer)),
+var parse = function (buffer) {
+  var rb = new ReadBuffer(buffer),
       font = {
         tables: {}
       };
 
-  var signature = buffer.read(Type.ULONG, 0);
+  var signature = rb.read(Type.ULONG, 0);
 
   if (signature === Format.WOFF) {
-    font.header = buffer.read(woff.Header);
-    var index = buffer.readArray(woff.TableDirectory, font.header.numTables);
+    font.header = rb.read(woff.Header);
+    var index = rb.readArray(woff.TableDirectory, font.header.numTables);
 
     index.forEach(function (table) {
       var data = null,
           tag = table.tag;
 
       if (table.compLength !== table.origLength) {
-        var compressedData = toBuffer(new Uint8Array(arrayBuffer, table.offset, util.pad(table.compLength)));
-        var decompressedData = new zlib.inflateSync(compressedData);
+        var compressedData = buffer.slice(table.offset, table.offset + util.pad(table.compLength));
 
-        font.tables[tag] = new DataView(toArrayBuffer(decompressedData));
+        font.tables[tag] = zlib.inflateSync(compressedData);
       } else {
-        font.tables[tag] = new DataView(arrayBuffer, table.offset, util.pad(table.origLength));
+        font.tables[tag] = buffer.slice(table.offset, table.offset + util.pad(table.origLength));
       }
     });
   } else if (signature === Format.TRUETYPE || signature === Format.OPENTYPE) {
-    font.header = buffer.read(sfnt.Header);
-    var index = buffer.readArray(sfnt.OffsetTable, font.header.numTables);
+    font.header = rb.read(sfnt.Header);
+    var index = rb.readArray(sfnt.OffsetTable, font.header.numTables);
 
     index.forEach(function (table) {
-      font.tables[table.tag] = new DataView(arrayBuffer, table.offset, util.pad(table.length));
+      font.tables[table.tag] = buffer.slice(table.offset, table.offset + util.pad(table.length));
     });
   }
 

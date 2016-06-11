@@ -1,17 +1,17 @@
 /**
- * @enum {opentype.Struct}
+ * @enum {Struct}
  */
 var Type = {
  BYTE: {
     sizeof: 1,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      return dataView.getUint8(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readUInt8(opt_byteOffset || 0);
     }
   },
 
@@ -19,12 +19,12 @@ var Type = {
     sizeof: 1,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      return dataView.getInt8(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readInt8(opt_byteOffset || 0);
     }
   },
 
@@ -32,12 +32,12 @@ var Type = {
     sizeof: 2,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      return dataView.getUint16(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readUInt16BE(opt_byteOffset || 0);
     }
   },
 
@@ -45,12 +45,12 @@ var Type = {
     sizeof: 2,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      return dataView.getInt16(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readInt16BE(opt_byteOffset || 0);
     }
   },
 
@@ -58,12 +58,12 @@ var Type = {
     sizeof: 4,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      return dataView.getUint32(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readUInt32BE(opt_byteOffset || 0);
     }
   },
 
@@ -71,12 +71,12 @@ var Type = {
     sizeof: 4,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      return dataView.getInt32(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readInt32BE(opt_byteOffset || 0);
     }
   },
 
@@ -84,12 +84,12 @@ var Type = {
     sizeof: 4,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {string}
      */
-    read: function (dataView, opt_byteOffset) {
-      var uint = dataView.getUint32(opt_byteOffset || 0);
+    read: function (buffer, opt_byteOffset) {
+      var uint = buffer.readUInt32BE(opt_byteOffset || 0);
 
       return String.fromCharCode((uint & 0xFF000000) >> 24) +
              String.fromCharCode((uint & 0x00FF0000) >> 16) +
@@ -102,13 +102,13 @@ var Type = {
     sizeof: 4,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {number}
      */
-    read: function (dataView, opt_byteOffset) {
-      var integer = dataView.getInt16(opt_byteOffset || 0),
-          decimal = dataView.getInt16(opt_byteOffset || 0 + 2);
+    read: function (buffer, opt_byteOffset) {
+      var integer = buffer.readInt16BE(opt_byteOffset || 0),
+          decimal = buffer.readInt16BE(opt_byteOffset || 0 + 2);
 
       // This is ugly, but gives better precision than getInt32 / 65536
       return +(integer + "." + decimal);
@@ -119,17 +119,12 @@ var Type = {
     sizeof: 8,
 
     /**
-     * @param {DataView} dataView
+     * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
      * @return {{high: number, low: number}}
      */
-    read: function (dataView, opt_byteOffset) {
-      var byteOffset = opt_byteOffset || 0;
-
-      return {
-        high: dataView.getInt32(byteOffset),
-        low: dataView.getInt32(byteOffset + 4)
-      };
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readIntBE(opt_byteOffset || 0, 8);
     }
   }
 };

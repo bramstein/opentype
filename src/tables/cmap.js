@@ -2,8 +2,8 @@ var ReadBuffer = require('../readbuffer');
 var Type = require('../Type');
 var util = require('../util');
 
-var cmap = function (dataView, font) {
-  var table = new ReadBuffer(dataView),
+var cmap = function (buffer, font) {
+  var table = new ReadBuffer(buffer),
       data = {};
 
   var header = table.read(util.struct({

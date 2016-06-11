@@ -55,12 +55,12 @@ util.struct = function (types) {
 
   return {
     sizeof: sizeof,
-    read: function (dataView, opt_byteOffset) {
+    read: function (buffer, opt_byteOffset) {
       var byteOffset = opt_byteOffset || 0,
           struct = {};
 
       for (var key in types) {
-        struct[key] = types[key].read(dataView, byteOffset);
+        struct[key] = types[key].read(buffer, byteOffset);
         byteOffset += types[key].sizeof;
       }
 

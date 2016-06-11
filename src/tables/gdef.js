@@ -2,8 +2,8 @@ var ReadBuffer = require('../readbuffer');
 var Type = require('../Type');
 var util = require('../util');
 
-var gdef = function (dataView, font) {
-  var table = new ReadBuffer(dataView);
+var gdef = function (buffer, font) {
+  var table = new ReadBuffer(buffer);
 
   var version = table.read(Type.ULONG);
   var glyphClassDef = table.read(Type.OFFSET);

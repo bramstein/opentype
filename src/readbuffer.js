@@ -1,10 +1,10 @@
 /**
  * @constructor
- * @param {DataView} dataView
+ * @param {Buffer} buffer
  * @param {number=} opt_byteOffset
  */
-var ReadBuffer = function (dataView, opt_byteOffset) {
-  this.dataView = dataView;
+var ReadBuffer = function (buffer, opt_byteOffset) {
+  this.buffer = buffer;
   this.byteOffset = opt_byteOffset || 0;
 };
 
@@ -26,7 +26,7 @@ ReadBuffer.prototype.goto = function (byteOffset) {
  * @return {?}
  */
 ReadBuffer.prototype.read = function (type, opt_byteOffset) {
-  var data = type.read(this.dataView, opt_byteOffset || this.byteOffset);
+  var data = type.read(this.buffer, opt_byteOffset || this.byteOffset);
 
   if (opt_byteOffset === undefined) {
     this.byteOffset += type.sizeof;
@@ -50,7 +50,7 @@ ReadBuffer.prototype.readArray = function (type, count, opt_byteOffset) {
       data = [];
 
   for (var i = 0; i < count; i += 1) {
-    data.push(type.read(this.dataView, byteOffset));
+    data.push(type.read(this.buffer, byteOffset));
     byteOffset += type.sizeof;
   }
 
