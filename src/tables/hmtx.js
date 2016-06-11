@@ -1,29 +1,20 @@
-goog.provide('opentype.tables.hmtx');
+var Buffer = require('../buffer');
+var Type = require('../type');
+var util = require('../util');
 
-goog.require('opentype.Buffer');
-goog.require('opentype.Type');
-goog.require('opentype.util');
+module.exports = function (dataView, font) {
+  var table = new Buffer(dataView),
+      numberOfHMetrics = font.tables.hhea.numberOfHMetrics,
+      numGlyphs = font.tables.maxp.numGlyphs;
 
-goog.scope(function () {
-  var Buffer = opentype.Buffer,
-      tables = opentype.tables,
-      Type = opentype.Type,
-      util = opentype.util;
+  var data = {};
 
-  tables.hmtx = function (dataView, font) {
-    var table = new Buffer(dataView),
-        numberOfHMetrics = font['tables']['hhea']['numberOfHMetrics'],
-        numGlyphs = font['tables']['maxp']['numGlyphs'];
+  data.hMetrics = table.readArray(util.struct({
+    advanceWidth: Type.USHORT,
+    lsb: Type.SHORT
+  }), numberOfHMetrics);
 
-    var data = {};
+  data.leftSideBearing = table.readArray(Type.SHORT, numGlyphs);
 
-    data['hMetrics'] = table.readArray(util.struct({
-      'advanceWidth': Type.USHORT,
-      'lsb': Type.SHORT
-    }), numberOfHMetrics);
-
-    data['leftSideBearing'] = table.readArray(Type.SHORT, numGlyphs);
-
-    return data;
-  };
-});
+  return data;
+};
