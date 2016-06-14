@@ -4,7 +4,7 @@ var util = require('../util');
 
 var cmap = function (buffer, font) {
   var table = new ReadBuffer(buffer),
-      data = {};
+      data = [];
 
   var header = table.read(util.struct({
     version: Type.USHORT,
@@ -17,11 +17,10 @@ var cmap = function (buffer, font) {
     offset: Type.ULONG
   }), header.numTables);
 
-  data['charCode'] = {};
-  data['glyph'] = [];
-
   index.forEach(function (subTable) {
     var subData = {};
+    var charCodes = {};
+    var language = 0;
 
     table.goto(subTable.offset);
 
@@ -38,10 +37,11 @@ var cmap = function (buffer, font) {
 
       var glyphIdArray = table.readArray(Type.BYTE, 256);
 
-      glyphIdArray.forEach(function (id) {
-        data['charCode'][id] = id;
-        data['glyph'][id] = id;
-      });
+      for (var i = 0; i < 256; i++) {
+        charCodes[i] = glyphIdArray[i];
+      }
+
+      language = subData.language;
     } else if (format === 4) {
       subData = table.read(util.struct({
         format: Type.USHORT,
@@ -65,7 +65,7 @@ var cmap = function (buffer, font) {
       var idRangeOffset = table.readArray(Type.USHORT, segCount);
       var glyphIdArray = [];
 
-      for (var i = 0; i < segCount; i += 1) {
+      for (var i = 0; i < segCount - 1; i += 1) {
         var start = startCount[i];
         var end = endCount[i];
         var delta = idDelta[i];
@@ -82,10 +82,11 @@ var cmap = function (buffer, font) {
             id = (table.read(Type.USHORT, offset + rangeOffset + (charCode - start) * Type.USHORT.sizeof) + delta) % 65536;
           }
 
-          data['charCode'][charCode] = id;
-          data['glyph'][id] = charCode;
+          charCodes[charCode] = id;
         }
       }
+
+      language = subData.language;
     } else if (format === 12) {
       subData = table.read(util.struct({
         format: Type.USHORT,
@@ -105,11 +106,13 @@ var cmap = function (buffer, font) {
         var start = groups[i].startCharCode;
         var end = groups[i].endCharCode;
 
-        for (var charCodej = start, id = groups[i].glyphID; charCode <= end; charCode += 1, id++) {
-          data['charCode'][charCode] = id;
-          data['glyph'][id] = charCode;
+        for (var charCode = start, id = groups[i].glyphID; charCode <= end; charCode += 1, id++) {
+          charCodes[charCode] = id;
         }
       }
+
+      language = subData.language;
+
     } else if (format === 13) {
       subData = table.read(util.struct({
         format: Type.USHORT,
@@ -133,12 +136,21 @@ var cmap = function (buffer, font) {
           var charCode = j,
               id = groups[i].glyphID;
 
-          data['charCode'][charCode] = id;
-          data['glyph'][id] = charCode;
+          charCodes[charCode] = id;
         }
       }
+
+      language = subData.language;
     }
     // TODO: Add format 14
+
+    data.push({
+      format: format,
+      platformID: subTable.platformID,
+      encodingID: subTable.encodingID,
+      language: language,
+      charCodes: charCodes
+    });
   });
 
   return data;

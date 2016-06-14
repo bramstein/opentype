@@ -5,6 +5,9 @@
   "directories": {
     "test": "test"
   },
+  "scripts": {
+    "test": "mocha -R spec test/*"
+  },
   "repository": "git@github.com:bramstein/opentype.git",
   "keywords": [
     "font",
@@ -19,10 +22,13 @@
   "author": "Bram Stein <b.l.stein@gmail.com> (http://www.bramstein.com)",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "expect.js": "~0.2.0",
-    "mocha": "~1.12.0"
+    "concentrate": "^0.2.3",
+    "mocha": "^2.5.3",
+    "unexpected": "^10.13.3",
+    "unexpected-stream": "^2.0.4"
   },
   "dependencies": {
-    "brotli": "^1.2.0"
+    "brotli": "^1.2.0",
+    "node-int64": "^0.4.0"
   }
 }

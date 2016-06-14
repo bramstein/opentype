@@ -1,3 +1,5 @@
+var Int64 = require('node-int64')
+
 /**
  * @enum {Struct}
  */
@@ -108,7 +110,7 @@ var Type = {
      */
     read: function (buffer, opt_byteOffset) {
       var integer = buffer.readInt16BE(opt_byteOffset || 0),
-          decimal = buffer.readInt16BE(opt_byteOffset || 0 + 2);
+          decimal = buffer.readInt16BE((opt_byteOffset || 0) + 2);
 
       // This is ugly, but gives better precision than getInt32 / 65536
       return +(integer + "." + decimal);
@@ -124,7 +126,7 @@ var Type = {
      * @return {{high: number, low: number}}
      */
     read: function (buffer, opt_byteOffset) {
-      return buffer.readIntBE(opt_byteOffset || 0, 8);
+      return new Int64(buffer.slice(opt_byteOffset || 0, (opt_byteOffset || 0) + 8));
     }
   }
 };
