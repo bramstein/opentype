@@ -5,7 +5,7 @@ var util = require('../util');
 module.exports = function (buffer, font) {
   var table = new ReadBuffer(buffer),
       numberOfHMetrics = font.tables.hhea.numberOfHMetrics,
-      numGlyphs = font.tables.maxp.numGlyphs;
+      numGlyphs = font.tables.maxp.numGlyphs - numberOfHMetrics;
 
   var data = {};
 
