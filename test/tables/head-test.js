@@ -29,8 +29,8 @@ describe('tables.head', function () {
       .result();
 
     expect(head(data), 'to equal', {
-      version: 1.0,
-      fontRevision: 0.1,
+      version: 0x00010000,
+      fontRevision: 0x00000001,
       checkSumAdjustment: 0xB1B0AFBA,
       magicNumber: 0x5F0F3CF5,
       flags: 0x1010,

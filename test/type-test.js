@@ -150,17 +150,21 @@ describe('Type', function () {
     it('reads a fixed number', function () {
       var data = c().int32be(0x00000001).result();
 
-      expect(Type.FIXED.read(data), 'to equal', 0.1);
+      expect(Type.FIXED.read(data), 'to equal', 0x00000001);
 
       var data = c().int32be(0x00010000).result();
 
-      expect(Type.FIXED.read(data), 'to equal', 1.0);
+      expect(Type.FIXED.read(data), 'to equal', 0x00010000);
+
+      var data = c().int32be(0x00005000).result();
+
+      expect(Type.FIXED.read(data), 'to equal', 0x00005000);
     });
 
     it('reads a fixed number at an offset', function () {
       var data = c().uint8(10).int32be(0x00010000).result();
 
-      expect(Type.FIXED.read(data, 1), 'to equal', 1.0);
+      expect(Type.FIXED.read(data, 1), 'to equal', 0x00010000);
     });
   });
 

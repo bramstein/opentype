@@ -19,11 +19,11 @@ module.exports = function (buffer, font) {
 
   data.glyphNames = {};
 
-  if (data.version === 1.0) {
+  if (data.version === 0x00010000) {
     for (var i = 0; i < 259; i += 1) {
       data.glyphNames[i] = MacRomanIdentifiers[i];
     }
-  } else if (data.version === 2.0) {
+  } else if (data.version === 0x00020000) {
     var numberOfGlyphs = table.read(Type.USHORT);
     var glyphNameIndex = table.readArray(Type.USHORT, numberOfGlyphs);
     var glyphNames = [].concat(MacRomanIdentifiers);

@@ -10,7 +10,7 @@ module.exports = function (buffer, font) {
     numGlyphs: Type.USHORT
   }));
 
-  if (data.version === 1) {
+  if (data.version === 0x00010000) {
     util.extend(data, table.read(util.struct({
       maxPoints: Type.USHORT,
       maxContours: Type.USHORT,

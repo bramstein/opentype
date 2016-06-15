@@ -17,8 +17,8 @@ describe('tables.post', function () {
       .result();
 
     expect(post(data), 'to satisfy', {
-      version: 1.0,
-      italicAngle: 1.0,
+      version: 0x00010000,
+      italicAngle: 0x00010000,
       underlinePosition: 10,
       underlineThickness: 4,
       isFixedPitch: 1,
@@ -48,8 +48,8 @@ describe('tables.post', function () {
       .result();
 
     expect(post(data), 'to equal', {
-      version: 2.0,
-      italicAngle: 1.0,
+      version: 0x00020000,
+      italicAngle: 0x00010000,
       underlinePosition: 10,
       underlineThickness: 4,
       isFixedPitch: 1,
@@ -85,8 +85,8 @@ describe('tables.post', function () {
       .result();
 
     expect(post(data), 'to equal', {
-      version: 2.0,
-      italicAngle: 1.0,
+      version: 0x00020000,
+      italicAngle: 0x00010000,
       underlinePosition: 10,
       underlineThickness: 4,
       isFixedPitch: 1,
@@ -115,8 +115,8 @@ describe('tables.post', function () {
       .result();
 
     expect(post(data), 'to equal', {
-      version: 3.0,
-      italicAngle: 1.0,
+      version: 0x00030000,
+      italicAngle: 0x00010000,
       underlinePosition: 10,
       underlineThickness: 4,
       isFixedPitch: 1,
@@ -127,7 +127,5 @@ describe('tables.post', function () {
       glyphNames: {}
     });
   });
-
-
 });
 

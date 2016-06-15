@@ -25,7 +25,7 @@ describe('tables.hhea', function () {
       .result();
 
     expect(hhea(data), 'to equal', {
-      version: 1.0,
+      version: 0x00010000,
       ascender: 10,
       descender: 20,
       lineGap: 30,

@@ -109,11 +109,7 @@ var Type = {
      * @return {number}
      */
     read: function (buffer, opt_byteOffset) {
-      var integer = buffer.readInt16BE(opt_byteOffset || 0),
-          decimal = buffer.readInt16BE((opt_byteOffset || 0) + 2);
-
-      // This is ugly, but gives better precision than getInt32 / 65536
-      return +(integer + "." + decimal);
+      return buffer.readUInt32BE(opt_byteOffset || 0);
     }
   },
 
