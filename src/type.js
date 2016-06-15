@@ -123,10 +123,23 @@ var Type = {
     /**
      * @param {Buffer} buffer
      * @param {number=} opt_byteOffset
-     * @return {{high: number, low: number}}
+     * @return {Int64}
      */
     read: function (buffer, opt_byteOffset) {
       return new Int64(buffer.slice(opt_byteOffset || 0, (opt_byteOffset || 0) + 8));
+    }
+  },
+
+  UINT24: {
+    sizeof: 3,
+
+    /**
+     * @param {Buffer} buffer
+     * @param {number=} opt_byteOffset
+     * @return {number}
+     */
+    read: function (buffer, opt_byteOffset) {
+      return buffer.readUIntBE(opt_byteOffset || 0, 3);
     }
   }
 };

@@ -27,7 +27,7 @@ var cmap = function (buffer, font) {
     var format = table.read(Type.USHORT, subTable.offset);
 
     // For now we support the same formats as OTS, which
-    // only supports 0, 4, 12, 13, and (14).
+    // only supports 0, 4, 12, 13, and 14.
     if (format === 0) {
       subData = table.read(util.struct({
         format: Type.USHORT,
@@ -141,8 +141,42 @@ var cmap = function (buffer, font) {
       }
 
       language = subData.language;
+    } else if (format === 14) {
+      subData = table.read(util.struct({
+        format: Type.USHORT,
+        length: Type.ULONG,
+        numVarSelectorRecords: Type.ULONG
+      }));
+
+
+      var records = table.readArray(util.struct({
+        varSelector: Type.UINT24,
+        defaultUVSOffset: Type.ULONG,
+        nonDefaultUVSOffset: Type.ULONG
+      }), subData.numVarSelectorRecords);
+
+      records.forEach(function (record) {
+        if (record.defaultUVSOffset !== 0) {
+          table.goto(record.defaultUVSOffset);
+
+          var ranges = table.readArray(util.struct({
+            startUnicodeValue: Type.UINT24,
+            additionalCount: Type.BYTE
+          }), table.read(Type.ULONG));
+        }
+
+        if (record.nonDefaultUVSOffset !== 0) {
+          table.goto(record.nonDefaultUVSOffset);
+
+          var ranges = table.readArray(util.struct({
+            unicodeValue: Type.UINT24,
+            glyphID: Type.BYTE
+          }), table.read(Type.ULONG));
+        }
+      });
+
+      language = 0;
     }
-    // TODO: Add format 14
 
     data.push({
       format: format,

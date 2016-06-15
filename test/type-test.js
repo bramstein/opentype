@@ -177,4 +177,18 @@ describe('Type', function () {
       expect(Type.LONGDATETIME.read(data, 1), 'to equal', new Int64(10));
     });
   });
+
+  describe('UINT24', function () {
+    it('reads an unsigned int 24', function () {
+      var data = new Buffer([0x01, 0x02, 0x03]);
+
+      expect(Type.UINT24.read(data), 'to equal', 66051);
+    });
+
+    it('reads an unsigned int 24 at an offset', function () {
+      var data = c().uint8(10).buffer(new Buffer([0x01, 0x02, 0x03])).result();
+
+      expect(Type.UINT24.read(data, 1), 'to equal', 66051);
+    });
+  });
 });
