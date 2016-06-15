@@ -17,13 +17,13 @@ module.exports = function (buffer, font) {
     maxMemType1: Type.ULONG
   }));
 
-  data['glyphNames'] = {};
+  data.glyphNames = {};
 
-  if (data['version'] === 0) {
+  if (data.version === 1.0) {
     for (var i = 0; i < 259; i += 1) {
-      data['glyphNames'][i] = MacRomanIdentifiers[i];
+      data.glyphNames[i] = MacRomanIdentifiers[i];
     }
-  } else if (data['version'] === 2) {
+  } else if (data.version === 2.0) {
     var numberOfGlyphs = table.read(Type.USHORT);
     var glyphNameIndex = table.readArray(Type.USHORT, numberOfGlyphs);
     var glyphNames = [].concat(MacRomanIdentifiers);
@@ -41,9 +41,9 @@ module.exports = function (buffer, font) {
       var index = glyphNameIndex[i];
 
       if (index < 258) {
-        data['glyphNames'][i] = glyphNames[index];
+        data.glyphNames[i] = glyphNames[index];
       } else {
-        data['glyphNames'][i] = names[index - 258];
+        data.glyphNames[i] = names[index - 258];
       }
     }
   }
