@@ -1,61 +1,54 @@
-goog.provide('opentype.tables.gdef');
+var ReadBuffer = require('../readbuffer');
+var Type = require('../Type');
+var util = require('../util');
 
-goog.require('opentype.Buffer');
-goog.require('opentype.Type');
-goog.require('opentype.util');
+var gdef = function (buffer, font) {
+  var table = new ReadBuffer(buffer);
 
-goog.scope(function () {
-  var Buffer = opentype.Buffer,
-      Type = opentype.Type,
-      util = opentype.util,
-      tables = opentype.tables;
+  var version = table.read(Type.ULONG);
+  var glyphClassDef = table.read(Type.OFFSET);
+  var data = {};
 
-  tables.gdef = function (dataView, font) {
-    var table = new Buffer(dataView);
+  if (glyphClassDef !== 0) {
+    data.GlyphClassDef = gdef.glyphClassDefinitions(table, glyphClassDef);
+  }
+  return data;
+};
 
-    var version = table.read(Type.ULONG);
-    var glyphClassDef = table.read(Type.OFFSET);
-    var data = {};
+gdef.glyphClassDefinitions = function (table, offset) {
+  table.goto(offset);
 
-    if (glyphClassDef !== 0) {
-      data['GlyphClassDef'] = tables.gdef.glyphClassDefinitions(table, glyphClassDef);
+  var format = table.read(Type.USHORT);
+  var ids = [];
+
+  if (format === 1) {
+    var startGlyph = table.read(Type.GLYPHID);
+    var glyphCount = table.read(Type.USHORT);
+    var classValueArray =  table.readArray(Type.GLYPHID, glyphCount);
+
+    for (var j = 0; j < glyphCount; j += 1) {
+      ids[startGlyph + j] = classValueArray[j];
     }
-    return data;
-  };
+  } else if (format === 2) {
+    var classRangeCount = table.read(Type.USHORT);
+    var classRangeRecord = table.readArray(util.struct({
+      'Start': Type.GLYPHID,
+      'End': Type.GLYPHID,
+      'Class': Type.USHORT
+    }), classRangeCount);
 
-  tables.gdef.glyphClassDefinitions = function (table, offset) {
-    table.goto(offset);
+    classRangeRecord.forEach(function (record) {
+      var start = record['Start'];
+      var end = record['End'];
+      var classDefinition = record['Class'];
 
-    var format = table.read(Type.USHORT);
-    var ids = [];
-
-    if (format === 1) {
-      var startGlyph = table.read(Type.GLYPHID);
-      var glyphCount = table.read(Type.USHORT);
-      var classValueArray =  table.readArray(Type.GLYPHID, glyphCount);
-
-      for (var j = 0; j < glyphCount; j += 1) {
-        ids[startGlyph + j] = classValueArray[j];
+      for (var j = start; j < end; j += 1) {
+        ids[j] = classDefinition;
       }
-    } else if (format === 2) {
-      var classRangeCount = table.read(Type.USHORT);
-      var classRangeRecord = table.readArray(util.struct({
-        'Start': Type.GLYPHID,
-        'End': Type.GLYPHID,
-        'Class': Type.USHORT
-      }), classRangeCount);
+    });
 
-      classRangeRecord.forEach(function (record) {
-        var start = record['Start'];
-        var end = record['End'];
-        var classDefinition = record['Class'];
+    return ids;
+  }
+};
 
-        for (var j = start; j < end; j += 1) {
-          ids[j] = classDefinition;
-        }
-      });
-
-      return ids;
-    }
-  };
-});
+module.exports = gdef;
