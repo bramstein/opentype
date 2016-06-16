@@ -45,7 +45,7 @@ module.exports = function (buffer, font) {
     ulUnicodeRange4: Type.ULONG,
   })));
 
-  data.achVendID = table.readArray(Type.CHAR, 4);
+  data.achVendID = table.read(Type.TAG);
 
   util.extend(data, table.read(util.struct({
     fsSelection: Type.USHORT,
@@ -72,6 +72,13 @@ module.exports = function (buffer, font) {
       usDefaultChar: Type.USHORT,
       usBreakChar: Type.USHORT,
       usMaxContext: Type.USHORT
+    })));
+  }
+
+  if (data.version >= 5) {
+    util.extend(data, table.read(util.struct({
+      usLowerOpticalPointSize: Type.USHORT,
+      usUpperOpticalPointSize: Type.USHORT
     })));
   }
 
