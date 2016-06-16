@@ -1,3 +1,5 @@
+var iconv = require('iconv-lite');
+
 /**
  * @constructor
  * @param {Buffer} buffer
@@ -59,6 +61,16 @@ ReadBuffer.prototype.readArray = function (type, count, opt_byteOffset) {
   }
 
   return data;
+};
+
+ReadBuffer.prototype.readString = function (encoding, length, opt_byteOffset) {
+  var byteOffset = opt_byteOffset || this.byteOffset;
+
+  var result = iconv.decode(this.buffer.slice(byteOffset, byteOffset + length), encoding);
+
+  this.byteOffset += length;
+
+  return result;
 };
 
 module.exports = ReadBuffer;
