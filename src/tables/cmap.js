@@ -77,9 +77,9 @@ var cmap = function (buffer, font) {
               id = null;
 
           if (rangeOffset === 0) {
-            id = (charCode + delta) % 65536;
+            id = (charCode + delta) % 0xFFFF;
           } else {
-            id = (table.read(Type.USHORT, offset + rangeOffset + (charCode - start) * Type.USHORT.sizeof) + delta) % 65536;
+            id = (table.read(Type.USHORT, offset + rangeOffset + (charCode - start) * Type.USHORT.sizeof) + delta) % 0xFFFF;
           }
 
           charCodes[charCode] = id;
