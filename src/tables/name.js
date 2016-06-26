@@ -27,7 +27,7 @@ module.exports = function (buffer, font) {
     }), table.read(Type.USHORT));
 
     langTagRecords = langTagRecordOffsets.map(function (record) {
-      return util.byteArrayToString(table.readArray(Type.USHORT, record.length, stringOffset + record.offset));
+      return table.readString('ascii', record.length, stringOffset + record.offset);
     });
   }
 

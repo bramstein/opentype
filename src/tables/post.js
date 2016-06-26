@@ -33,7 +33,7 @@ module.exports = function (buffer, font) {
       var index = glyphNameIndex[i];
 
       if (index >= 258) {
-        names.push(util.byteArrayToString(table.readArray(Type.CHAR, table.read(Type.BYTE))));
+        names.push(table.readString('ascii', table.read(Type.BYTE)));
       }
     }
 

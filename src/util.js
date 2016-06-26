@@ -27,20 +27,6 @@ util.extend = function (var_args) {
 };
 
 /**
- * @param {Array.<number>} array
- * @return {string}
- */
-util.byteArrayToString = function (array) {
-  var result = '';
-
-  for (var i = 0; i < array.length; i += 1) {
-    result += String.fromCharCode(array[i]);
-  }
-
-  return result;
-};
-
-/**
  * Create a struct of a fixed size.
  *
  * @param {Object.<string, opentype.Type>} types
