@@ -136,8 +136,8 @@ var Coverage = function (buffer, offset) {
     }), count);
 
     for (var i = 0; i < count; i += 1) {
-      for(var j = records[i].start; j < records[i].end; j += 1) {
-        data.push(j);
+      for(var glyph = records[i].start; glyph <= records[i].end; glyph += 1) {
+        data.push(records[i].startCoverageIndex + glyph - records[i].start);
       }
     }
   }
