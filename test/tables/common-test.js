@@ -3,7 +3,7 @@ var expect = require('unexpected');
 var c = require('concentrate');
 var ReadBuffer = require('../../src/readbuffer');
 
-describe('common', function () {
+describe('tables.common', function () {
   it('parses a List', function () {
     var data = c()
       .uint16be(2)             // count
