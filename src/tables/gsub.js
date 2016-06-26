@@ -28,17 +28,17 @@ var gsub = function (buffer, font) {
 
       data[scriptTag][languageTag] = {};
 
-      languageTable['FeatureIndex'].forEach(function (featureIndex) {
+      languageTable.FeatureIndex.forEach(function (featureIndex) {
         var feature = featureList[featureIndex],
             featureTag = feature.tag,
             featureTable = feature.table;
 
         data[scriptTag][languageTag][featureTag] = {};
 
-        featureTable['LookupListIndex'].forEach(function (lookupIndex) {
+        featureTable.LookupListIndex.forEach(function (lookupIndex) {
           var lookup = lookupList[lookupIndex];
 
-          lookup['SubTable'].forEach(function (subTable) {
+          lookup.SubTable.forEach(function (subTable) {
             Object.keys(subTable).forEach(function (glyphId) {
               data[scriptTag][languageTag][featureTag][glyphId] = subTable[glyphId];
             });
@@ -78,6 +78,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
    *  }
    * }
    */
+
   if (lookupType === 1 && format === 1) {
     var coverageOffset = buffer.read(Type.OFFSET);
     var deltaGlyphId = buffer.read(Type.SHORT);
