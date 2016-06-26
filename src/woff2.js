@@ -1,0 +1,98 @@
+var Type = require('./type');
+var util = require('./util');
+
+var TableDirectoryEntry = util.struct({
+  flags: Type.BYTE,
+  tag: Type.TAG,
+  origLength: Type.BASE128,
+  transformLength: Type.BASE128
+});
+
+var Flags = [
+  'cmap',
+	'head',
+	'hhea',
+	'hmtx',
+	'maxp',
+	'name',
+	'OS/2',
+	'post',
+	'cvt ',
+  'fpgm',
+	'glyf',
+	'loca',
+	'prep',
+	'CFF ',
+	'VORG',
+	'EBDT',
+	'EBLC',
+	'gasp',
+  'hdmx',
+	'kern',
+	'LTSH',
+	'PCLT',
+	'VDMX',
+	'vhea',
+	'vmtx',
+	'BASE',
+	'GDEF',
+  'GPOS',
+	'GSUB',
+	'EBSC',
+	'JSTF',
+	'MATH',
+	'CBDT',
+	'CBLC',
+	'COLR',
+	'CPAL',
+  'SVG ',
+	'sbix',
+	'acnt',
+	'avar',
+	'bdat',
+	'bloc',
+	'bsln',
+	'cvar',
+	'fdsc',
+  'feat',
+	'fmtx',
+	'fvar',
+	'gvar',
+	'hsty',
+	'just',
+	'lcar',
+	'mort',
+	'morx',
+  'opbd',
+	'prop',
+	'trak',
+	'Zapf',
+	'Silf',
+	'Glat',
+	'Gloc',
+	'Feat',
+	'Sill'
+];
+
+var Header = util.struct({
+  signature: Type.ULONG,
+  flavor: Type.ULONG,
+  length: Type.ULONG,
+  numTables: Type.USHORT,
+  reserved: Type.USHORT,
+  totalSfntSize: Type.ULONG,
+  totalCompressedSize: Type.ULONG,
+  majorVersion: Type.USHORT,
+  minorVersion: Type.USHORT,
+  metaOffset: Type.ULONG,
+  metaLength: Type.ULONG,
+  metaOrigLength: Type.ULONG,
+  privOffset: Type.ULONG,
+  privLength: Type.ULONG
+});
+
+module.exports = {
+  Header: Header,
+  TableDirectoryEntry: TableDirectoryEntry,
+  Flags: Flags
+};

@@ -3,8 +3,10 @@ var Type = require('./Type');
 var util = require('./util');
 var sfnt = require('./sfnt');
 var woff = require('./woff');
+var woff2 = require('./woff2');
 var ReadBuffer = require('./readbuffer');
 var zlib = require('zlib');
+var brotli = require('brotli');
 
 var cmap = require('./tables/cmap');
 var head = require('./tables/head');
@@ -63,6 +65,48 @@ var parse = function (buffer) {
       } else {
         font.tables[tag] = buffer.slice(table.offset, table.offset + util.pad(table.origLength));
       }
+    });
+  } else if (signature === Format.WOFF2) {
+    var index = [];
+    var totalSize = 0;
+
+    font.header = rb.read(woff2.Header);
+
+    for (var i = 0; i < font.header.numTables; i++) {
+      var flag = rb.read(Type.BYTE);
+      var tag = null;
+
+      if (flag === 63) {
+        tag = rb.read(Type.TAG);
+      } else {
+        tag = woff2.Flags[flag];
+      }
+
+      var origLength = rb.read(Type.BASE128);
+
+      var transformVersion = (flag >>> 6) & 0x03;
+      if (tag === 'glyf' || tag === 'loca') {
+        transformVersion = 0;
+
+        var transformLength = rb.read(Type.BASE128);
+      }
+
+      totalSize += origLength;
+
+      index.push({
+        flags: flag,
+        tag: tag,
+        origLength: origLength
+      });
+    }
+
+    // TODO: Upgrade to Node v6.x so we can use Buffer.from.
+    var data = new Buffer(brotli.decompress(buffer.slice(rb.byteOffset, rb.byteOffset + totalSize)));
+    var offset = 0;
+
+    index.forEach(function (table) {
+      font.tables[table.tag] = data.slice(offset, offset + util.pad(table.origLength));
+      offset += table.origLength;
     });
   } else if (signature === Format.TRUETYPE || signature === Format.OPENTYPE) {
     font.header = rb.read(sfnt.Header);
