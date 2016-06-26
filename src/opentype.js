@@ -34,8 +34,8 @@ var TABLES = {
   'name': name,
   'OS/2': os_2,
   'post': post,
-  'GSUB': gsub,
-  'GDEF': gdef,
+//  'GSUB': gsub,
+//  'GDEF': gdef,
   'gasp': gasp
 };
 
