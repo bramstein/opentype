@@ -236,4 +236,49 @@ describe('common', function () {
 
     expect(common.Coverage(new ReadBuffer(data), 0), 'to equal', [10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25]);
   });
+
+  it('parses a Class definition table (format 1)', function () {
+    var data = c()
+      .uint16be(1)  // Format
+      .uint16be(5)  // StartGlyph
+      .uint16be(3)  // GlyphCount
+      .uint16be(10) // ClassValue[0]
+      .uint16be(20) // ClassValue[1]
+      .uint16be(30) // ClassValue[2]
+      .result();
+
+    expect(common.Class(new ReadBuffer(data), 0), 'to equal', {
+      5: 10,
+      6: 20,
+      7: 30
+    });
+  });
+
+  it('parses a Class definition table (format 2)', function () {
+    var data = c()
+      .uint16be(2)  // Format
+      .uint16be(2)  // ClassRangeCount
+      .uint16be(10) // Start[0]
+      .uint16be(15) // End[0]
+      .uint16be(1)  // Class[0]
+      .uint16be(20) // Start[1]
+      .uint16be(25) // End[1]
+      .uint16be(2)  // Class[1]
+      .result();
+
+    expect(common.Class(new ReadBuffer(data), 0), 'to equal', {
+      10: 1,
+      11: 1,
+      12: 1,
+      13: 1,
+      14: 1,
+      15: 1,
+      20: 2,
+      21: 2,
+      22: 2,
+      23: 2,
+      24: 2,
+      25: 2
+    });
+  });
 });

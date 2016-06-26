@@ -22,6 +22,36 @@ var List = function (buffer, offset, table) {
   return data;
 };
 
+var Class = function (buffer, offset) {
+  buffer.goto(offset);
+
+  var format = buffer.read(Type.USHORT);
+  var data = {};
+
+  if (format === 1) {
+    var startGlyph = buffer.read(Type.GLYPHID);
+    var classValues = buffer.readArray(Type.USHORT, buffer.read(Type.USHORT));
+
+    for (var i = startGlyph, j= 0; i < (startGlyph + classValues.length); i++, j++) {
+      data[i] = classValues[j];
+    }
+  } else if (format === 2) {
+    var classRangeRecords = buffer.readArray(util.struct({
+      Start: Type.GLYPHID,
+      End: Type.GLYPHID,
+      Class: Type.USHORT
+    }), buffer.read(Type.USHORT));
+
+    classRangeRecords.forEach(function (record) {
+      for (var i = record.Start; i <= record.End; i++) {
+        data[i] = record.Class;
+      }
+    });
+  }
+
+  return data;
+};
+
 var Script = function (buffer, offset) {
   buffer.goto(offset);
 
@@ -151,5 +181,6 @@ module.exports = {
   Feature: Feature,
   LookupList: LookupList,
   Lookup: Lookup,
-  Coverage: Coverage
+  Coverage: Coverage,
+  Class: Class
 };
