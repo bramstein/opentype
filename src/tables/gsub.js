@@ -37,10 +37,13 @@ var gsub = function (buffer, font) {
 
         featureTable.LookupListIndex.forEach(function (lookupIndex) {
           var lookup = lookupList[lookupIndex];
+          var type = gsub.LookupTypes[lookup.LookupType];
+
+          data[scriptTag][languageTag][featureTag][type] = {};
 
           lookup.SubTable.forEach(function (subTable) {
             Object.keys(subTable).forEach(function (glyphId) {
-              data[scriptTag][languageTag][featureTag][glyphId] = subTable[glyphId];
+              data[scriptTag][languageTag][featureTag][type][glyphId] = subTable[glyphId];
             });
           });
         });
@@ -50,6 +53,17 @@ var gsub = function (buffer, font) {
   return data;
 };
 
+gsub.LookupTypes = {
+  1: 'single',
+  2: 'multiple',
+  3: 'alternate',
+  4: 'ligature',
+  5: 'contextual',
+  6: 'chaining',
+  7: 'extension',
+  8: 'reverse'
+};
+
 gsub.LookupType = function (buffer, lookupType, offset) {
   buffer.goto(offset);
 
@@ -57,25 +71,28 @@ gsub.LookupType = function (buffer, lookupType, offset) {
   var data = {};
 
   /**
-   * Single:
-   *
-   * <GlyphId>: [<GlyphId>]
-   *
-   * Multiple:
-   *
-   * <GlyphId>: [<GlyphId>, ...]
-   *
-   * Alternate:
-   *
-   * <GlyphId>: [[<GlyphId>, ...]]
-   *
-   * Ligature:
-   *
-   * <GlyphId>: {
-   *  <GlyphId>: <GlyphId>,
-   *  <GlyphId>: {
-   *    <GlyphId>: <GlyphId>
-   *  }
+   * substitution: {
+   *   single: {
+   *     "A": "A-caret"
+   *   },
+   *   multiple: {
+   *     "A": ["A-caret", "A-long"]
+   *   },
+   *   alternate: {
+   *     "A": ["A-single", "A-multi"]
+   *   },
+   *   ligature: {
+   *     "f": [
+   *      { components: ["i"], ligature: "fi" },
+   *      { components: ["f"], ligature: "ff" },
+   *      { components: ["f", "i"], ligature: "ffi" },
+   *      { components: ["f", "l"], ligature: "ffl" },
+   *      { components: ["l"], ligature: "fl" }
+   *     ],
+   *     "e": [
+   *       ...
+   *     ]
+   *   }
    * }
    */
 
@@ -84,7 +101,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
     var deltaGlyphId = buffer.read(Type.SHORT);
     var coverage = common.Coverage(buffer, offset + coverageOffset);
     for (var i = 0; i < coverage.length; i += 1) {
-      data[coverage[i]] = [coverage[i] + deltaGlyphId];
+      data[coverage[i]] = coverage[i] + deltaGlyphId;
     }
   } else if (lookupType === 1 && format === 2) {
     var coverageOffset = buffer.read(Type.OFFSET);
@@ -93,7 +110,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
     var coverage = common.Coverage(buffer, offset + coverageOffset);
 
     for (var i = 0; i < coverage.length; i += 1) {
-      data[coverage[i]] = [substitutes[i]];
+      data[coverage[i]] = substitutes[i];
     }
   } else if (lookupType === 2 || lookupType === 3) {
     var coverageOffset = buffer.read(Type.OFFSET);
@@ -111,7 +128,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
 
     for (var i = 0; i < coverage.length; i += 1) {
       if (lookupType === 2) {
-        data[coverage[i]] = [sets[i]];
+        data[coverage[i]] = sets[i];
       } else {
         data[coverage[i]] = sets[i];
       }
@@ -128,9 +145,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
       buffer.goto(offset + setOffsets[i]);
       var ligatureCount = buffer.read(Type.USHORT);
       ligatureSetOffsets.push(buffer.readArray(Type.OFFSET, ligatureCount));
-
     }
-
 
     var ligatureSet = [];
 
@@ -143,7 +158,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
         var components = buffer.readArray(Type.GLYPHID, buffer.read(Type.USHORT) - 1);
 
         ligature.push({
-          ligGlyph: ligGlyph,
+          ligature: ligGlyph,
           components: components
         });
       }
@@ -151,24 +166,7 @@ gsub.LookupType = function (buffer, lookupType, offset) {
     }
 
     for (var i = 0; i < coverage.length; i += 1) {
-      var ligatures = ligatureSet[i];
-      data[coverage[i]] = {};
-
-      for (var j = 0; j < ligatures.length; j += 1) {
-        var components = ligatures[j].components,
-            ligature = ligatures[j].ligGlyph;
-
-        var current = data[coverage[i]];
-
-        for (var k = 0; k < components.length; k += 1) {
-          if (k < components.length - 1) {
-            current[components[k]] = {};
-            current = current[components[k]];
-          } else {
-            current[components[k]] = ligature;
-          }
-        }
-      }
+      data[coverage[i]] = ligatureSet[i];
     }
   }
   return data;

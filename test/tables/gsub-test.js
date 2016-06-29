@@ -46,8 +46,10 @@ describe('tables.GSUB', function () {
 			'EN  ': {
 				'GB  ': {
 					'liga': {
-						100: [110]
-					}
+            'single': {
+              100: 110
+            }
+          }
 				}
 			}
 		});
@@ -66,8 +68,8 @@ describe('tables.GSUB', function () {
 				.result();
 
 			expect(gsub.LookupType(new ReadBuffer(data), 1, 0), 'to equal', {
-				100: [110],
-        101: [111]
+				100: 110,
+        101: 111
 			});
 		});
 
@@ -85,8 +87,8 @@ describe('tables.GSUB', function () {
 				.result();
 
 			expect(gsub.LookupType(new ReadBuffer(data), 1, 0), 'to equal', {
-				100: [10],
-        101: [20]
+				100: 10,
+        101: 20
 			});
     });
 
@@ -110,8 +112,65 @@ describe('tables.GSUB', function () {
         .result();
 
       expect(gsub.LookupType(new ReadBuffer(data), 2, 0), 'to equal', {
-        100: [ [200, 201] ],
-        101: [ [300, 301] ]
+        100: [200, 201],
+        101: [300, 301]
+      });
+    });
+
+    it('parses lookup type 3: alternate substitution subtable', function () {
+      var data = c()
+        .uint16be(1)      // SubstFormat           (0)
+        .uint16be(10)     // CoverageOffset        (2)
+        .uint16be(2)      // AlternateSetCount     (4)
+        .uint16be(18)     // AlternateSetOffset[0] (6)
+        .uint16be(24)     // AlternateSetOffset[1] (8)
+        .uint16be(1)      // CoverageFormat        (10)
+        .uint16be(2)      // GlyphCount            (12)
+        .uint16be(100)    // GlyphArray[0]         (14)
+        .uint16be(101)    // GlyphArray[1]         (16)
+        .uint16be(2)      // GlyphCount            (18)
+        .uint16be(200)    // Alternate[0]          (20)
+        .uint16be(201)    // Alternate[1]          (22)
+        .uint16be(2)      // GlyphCount            (24)
+        .uint16be(300)    // Alternate[0]          (26)
+        .uint16be(301)    // Alternate[1]          (28)
+        .result();
+
+      expect(gsub.LookupType(new ReadBuffer(data), 3, 0), 'to equal', {
+        100: [200, 201],
+        101: [300, 301]
+      });
+    });
+
+    it('parses lookup type 4: ligature substitution subtable', function () {
+      var data = c()
+        .uint16be(1)      // SubstFormat           (0)
+        .uint16be(8)      // CoverageOffset        (2)
+        .uint16be(1)      // LigSetCount           (4)
+        .uint16be(14)     // LigSetOffset[0]       (6)
+        .uint16be(1)      // CoverageFormat        (8)
+        .uint16be(1)      // GlyphCount            (10)
+        .uint16be(100)    // GlyphArray[0]         (12)
+        .uint16be(2)      // LigatureCount         (14) LigatureSet   (0)
+        .uint16be(6)      // LigatureOffset[0]     (16) LigatureSet   (2)
+        .uint16be(14)     // LigatureOffset[0]     (18) LigatureSet   (4)
+        .uint16be(300)    // LigGlyph              (20) LigatureSet   (6)   Ligature[0]
+        .uint16be(3)      // CompCount             (22) LigatureSet   (8)   Ligature[0]
+        .uint16be(301)    // Component             (24) LigatureSet   (10)  Ligature[0]
+        .uint16be(302)    // Component             (26) LigatureSet   (12)  Ligature[0]
+        .uint16be(400)    // LigGlyph              (28) LigatureSet   (14)  Ligature[1]
+        .uint16be(2)      // CompCount             (30) LigatureSet   (16)  Ligature[1]
+        .uint16be(401)    // Component             (32) LigatureSet   (18)  Ligature[1]
+        .result();
+
+      expect(gsub.LookupType(new ReadBuffer(data), 4, 0), 'to equal', {
+        100: [{
+          components: [301, 302],
+          ligature: 300
+        }, {
+          components: [401],
+          ligature: 400
+        }]
       });
     });
 	});
