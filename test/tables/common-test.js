@@ -237,7 +237,7 @@ describe('tables.common', function () {
     expect(common.Coverage(new ReadBuffer(data), 0), 'to equal', [10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25]);
   });
 
-  it('parses a Class definition table (format 1)', function () {
+  it('parses a ClassDef definition table (format 1)', function () {
     var data = c()
       .uint16be(1)  // Format
       .uint16be(5)  // StartGlyph
@@ -247,14 +247,14 @@ describe('tables.common', function () {
       .uint16be(30) // ClassValue[2]
       .result();
 
-    expect(common.Class(new ReadBuffer(data), 0), 'to equal', {
+    expect(common.ClassDef(new ReadBuffer(data), 0), 'to equal', {
       5: 10,
       6: 20,
       7: 30
     });
   });
 
-  it('parses a Class definition table (format 2)', function () {
+  it('parses a ClassDef definition table (format 2)', function () {
     var data = c()
       .uint16be(2)  // Format
       .uint16be(2)  // ClassRangeCount
@@ -266,7 +266,7 @@ describe('tables.common', function () {
       .uint16be(2)  // Class[1]
       .result();
 
-    expect(common.Class(new ReadBuffer(data), 0), 'to equal', {
+    expect(common.ClassDef(new ReadBuffer(data), 0), 'to equal', {
       10: 1,
       11: 1,
       12: 1,

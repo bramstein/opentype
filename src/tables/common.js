@@ -22,7 +22,7 @@ var List = function (buffer, offset, table) {
   return data;
 };
 
-var Class = function (buffer, offset) {
+var ClassDef = function (buffer, offset) {
   buffer.goto(offset);
 
   var format = buffer.read(Type.USHORT);
@@ -182,5 +182,5 @@ module.exports = {
   LookupList: LookupList,
   Lookup: Lookup,
   Coverage: Coverage,
-  Class: Class
+  ClassDef: ClassDef
 };

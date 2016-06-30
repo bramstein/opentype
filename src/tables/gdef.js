@@ -11,7 +11,7 @@ var gdef = function (buffer, font) {
   var data = {};
 
   if (glyphClassDef !== 0) {
-    data.GlyphClassDef = common.Class(table, glyphClassDef);
+    data.GlyphClassDef = common.ClassDef(table, glyphClassDef);
   }
   return data;
 };
