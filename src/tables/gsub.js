@@ -64,6 +64,11 @@ gsub.LookupTypes = {
   8: 'reverse'
 };
 
+gsub.SubstLookupRecord = util.struct({
+  SequenceIndex: Type.USHORT,
+  LookupListIndex: Type.USHORT
+});
+
 gsub.LookupType = function (buffer, lookupType, offset) {
   buffer.goto(offset);
 
@@ -92,6 +97,9 @@ gsub.LookupType = function (buffer, lookupType, offset) {
    *     "e": [
    *       ...
    *     ]
+   *   },
+   *   contextual: {
+   *     "f"
    *   }
    * }
    */
@@ -168,6 +176,86 @@ gsub.LookupType = function (buffer, lookupType, offset) {
     for (var i = 0; i < coverage.length; i += 1) {
       data[coverage[i]] = ligatureSet[i];
     }
+  } else if (lookupType === 5 && format === 1) {
+    var coverageOffset = buffer.read(Type.OFFSET);
+    var subRuleSetCount = buffer.read(Type.USHORT);
+    var subRuleSetOffsets = buffer.readArray(Type.OFFSET, subRuleSetCount);
+
+    var coverage = common.Coverage(buffer, offset + coverageOffset);
+
+    subRuleSetOffsets.forEach(function (subRuleSetOffset) {
+      buffer.goto(offset + subRuleSetOffset);
+      var subRuleCount = buffer.read(Type.USHORT);
+      var subRuleOffsets = buffer.readArray(Type.OFFSET, subRuleCount);
+
+      subRuleOffsets.forEach(function (subRuleOffset) {
+        buffer.goto(offset + subRuleSetOffset + subRuleOffset);
+
+        var glyphCount = buffer.read(Type.USHORT);
+        var substCount = buffer.read(Type.USHORT);
+        var input = buffer.readArray(Type.GLYPHID, glyphCount - 1);
+        var records = buffer.readArray(gsub.SubstLookupRecord, substCount);
+
+        for (var i = 0; i < coverage.length; i++) {
+          if (!data[coverage[i]]) {
+            data[coverage[i]] = [];
+          }
+
+          data[coverage[i]].push({
+            input: input,
+            records: records
+          });
+        }
+      });
+    });
+  } else if (lookupType === 5 && format === 2) {
+    var coverageOffset = buffer.read(Type.OFFSET);
+    var classDefOffset = buffer.read(Type.OFFSET);
+    var subClassSetCount = buffer.read(Type.USHORT);
+    var subClassSetOffsets = buffer.readArray(Type.OFFSET, subClassSetCount);
+
+    var coverage = common.Coverage(buffer, offset + coverageOffset);
+    var classDef = common.ClassDef(buffer, offset + classDefOffset);
+
+    subClassSetOffsets.forEach(function (subClassSetOffset) {
+      buffer.goto(offset + subClassSetOffset);
+
+      var subClassRuleCount = buffer.read(Type.USHORT);
+      var subClassRuleOffsets = buffer.readArray(Type.OFFSET, subClassRuleCount);
+
+      subClassRuleOffsets.forEach(function (subClassRuleOffset) {
+        buffer.goto(offset + subClassSetOffset + subClassRuleOffset);
+
+        var glyphCount = buffer.read(Type.USHORT);
+        var substCount = buffer.read(Type.USHORT);
+        var classes = buffer.readArray(Type.USHORT, glyphCount - 1);
+        var records = buffer.readArray(gsub.SubstLookupRecord, substCount);
+      });
+    });
+  } else if (lookupType === 5 && format === 3) {
+    var glyphCount = buffer.read(Type.USHORT);
+    var substCount = buffer.read(Type.USHORT);
+    var coverageOffsets = buffer.readArray(Type.OFFSET, glyphCount);
+    var records = buffer.readArray(gsub.SubstLookupRecord, substCount);
+
+    coverageOffsets.forEach(function (coverageOffset) {
+      coverage = common.Coverage(buffer, offset + coverageOffset);
+    });
+  } else if (lookupType === 6 && format === 1) {
+  } else if (lookupType === 6 && format === 2) {
+  } else if (lookupType === 6 && format === 3) {
+  } else if (lookupType === 7) {
+    var extensionLookupType = buffer.read(Type.USHORT);
+    var extensionOffset = buffer.read(Type.ULONG);
+    data = gsub.LookupType(buffer, extensionLookupType, extensionOffset);
+  } else if (lookupType === 8 && format === 1) {
+    var coverageOffset = buffer.read(Type.OFFSET);
+    var backtrackGlyphCount = buffer.read(Type.USHORT);
+    var backtrackCoverageOffsets = buffer.readArray(Type.OFFSET, backtrackGlyphCount);
+    var lookaheadGlyphCount = buffer.read(Type.USHORT);
+    var lookaheadCoverageOffsets = buffer.readArray(Type.OFFSET, lookaheadGlyphCount);
+    var glyphCount = buffer.read(Type.USHORT);
+    var substitutes = buffer.readArray(Type.GLYPHID, glyphCount);
   }
   return data;
 };
