@@ -25,15 +25,15 @@ npm install opentype
 ```
 
 ```
-var parse = require('opentype');
+var opentype = require('opentype');
 var fs = require('fs');
 
 fs.readFile('font.otf', function (err, data) {
-  var font = parse(data);
+  var font = opentype.parse(data);
 });
 
 ```
-  
+
 ## Copyright and License
 
 This library is licensed under the three-clause BSD license. Copyright 2013-2016 Bram Stein. All rights reserved.
