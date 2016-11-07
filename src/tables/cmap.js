@@ -1,5 +1,5 @@
 var ReadBuffer = require('../readbuffer');
-var Type = require('../Type');
+var Type = require('../type');
 var util = require('../util');
 
 var cmap = function (buffer, font) {

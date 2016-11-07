@@ -1,4 +1,4 @@
-var Type = require('../Type');
+var Type = require('../type');
 var util = require('../util');
 
 var List = function (buffer, offset, table) {
