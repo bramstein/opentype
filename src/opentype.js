@@ -1,5 +1,5 @@
 var Format = require('./Format');
-var Type = require('./Type');
+var Type = require('./type');
 var util = require('./util');
 var sfnt = require('./sfnt');
 var woff = require('./woff');
