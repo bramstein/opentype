@@ -8,6 +8,7 @@
   "scripts": {
     "test": "mocha -R spec test/*"
   },
+  "main": "src/opentype.js",
   "repository": "git@github.com:bramstein/opentype.git",
   "keywords": [
     "font",
