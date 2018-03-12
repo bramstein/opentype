@@ -19,13 +19,15 @@ var post = require('./tables/post');
 var gsub = require('./tables/gsub');
 var gdef = require('./tables/gdef');
 var gasp = require('./tables/gasp');
+var sbix = require('./tables/sbix');
 
 var TABLES = {
   // Note that the order of the tables
   // is important. The `hmtx` table requires
-  // `hhea` and `maxp` tables to be parsed. The
-  // `post` table (depending on its version)
+  // `hhea` and `maxp` tables to be parsed.
+  // The `post` table (depending on its version)
   // requires the `maxp` table to be parsed.
+  // The `sbix` table requires `maxp` table to be parsed.
   'cmap': cmap,
   'head': head,
   'hhea': hhea,
@@ -36,7 +38,8 @@ var TABLES = {
   'post': post,
   'GSUB': gsub,
   'GDEF': gdef,
-  'gasp': gasp
+  'gasp': gasp,
+  'sbix': sbix
 };
 
 /**
