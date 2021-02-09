@@ -5,8 +5,6 @@ var sfnt = require('./sfnt');
 var woff = require('./woff');
 var woff2 = require('./woff2');
 var ReadBuffer = require('./readbuffer');
-var zlib = require('zlib');
-var brotli = require('brotli');
 
 var cmap = require('./tables/cmap');
 var head = require('./tables/head');
@@ -101,7 +99,7 @@ var parse = function (buffer) {
     }
 
     // TODO: Upgrade to Node v6.x so we can use Buffer.from.
-    var data = new Buffer(brotli.decompress(buffer.slice(rb.byteOffset, rb.byteOffset + totalSize)));
+    var data = new Buffer(zlib.brotliDecompressSync(buffer.slice(rb.byteOffset, rb.byteOffset + totalSize)));
     var offset = 0;
 
     index.forEach(function (table) {
