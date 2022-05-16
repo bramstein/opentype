@@ -1,4 +1,6 @@
-## An OpenType font parser in JavaScript
+## DEPRECATED: An OpenType font parser in JavaScript
+
+*This package is deprecated, please use [OpenType.js](https://opentype.js.org/), [Fontkit](https://github.com/foliojs/fontkit), or [lib-font](https://github.com/Pomax/lib-font) instead.*
 
 This is a pure JavaScript parser for OpenType font files. It supports fonts with CFF and TrueType outlines, and can read fonts wrapped as WOFF and WOFF2.
 
